@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    
+ 
+    <title>Journey Page</title>
+    <link href="css/bootstrap.css" rel="stylesheet">
+     
+ 
+	
+    <style>
+        * {
+            border: 0;
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+            :root {
+        --bg: #ffffff;  
+        --fg: hsl(var(--hue),10%,10%);
+        --primary: hsl(var(--hue),90%,50%);
+        --trans-dur: 0.3s;
+        --trans-timing: cubic-bezier(0.65,0,0.35,1);
+        font-size: calc(16px + (24 - 16) * (100vw - 320px) / (2560 - 320));
+       }
+
+        
+        a {
+            color: var(--primary);
+            transition: color var(--trans-dur);
+        }
+        
+        body,
+        button {
+            color: var(--fg);
+            font: 1em/1.5 "IBM Plex Sans", sans-serif;
+        }
+        
+        body {
+            background-color: var(--bg);
+            height: 100vh;
+            transition:
+                background-color var(--trans-dur),
+                color var(--trans-dur);
+        }
+        
+        h1 {
+            font-size: 2em;
+            margin: 0 0 3rem;
+            padding-top: 1.5rem;
+            text-align: center;
+        }
+        
+        .btn {
+            /* background-color: var(--fg); */
+            border-radius: 0.25em;
+            color: var(--bg);
+            cursor: pointer;
+            padding: 0.375em 0.75em;
+            transition:
+                background-color calc(var(--trans-dur) / 2) linear,
+                color var(--trans-dur);
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .btn:hover {
+            background-color: hsl(var(--hue),10%,50%);
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 0.375em;
+            margin-bottom: 1.5em;
+        }
+        
+        .timeline {
+            margin: auto;
+            padding: 0 1.5em;
+            width: 100%;
+            max-width: 36em;
+        }
+        
+        .timeline__arrow {
+            background-color: transparent;
+            border-radius: 0.25em;
+            cursor: pointer;
+            flex-shrink: 0;
+            margin-inline-end: 0.25em;
+            outline: transparent;
+            width: 2em;
+            height: 2em;
+            transition:
+                background-color calc(var(--trans-dur) / 2) linear,
+                color var(--trans-dur);
+            -webkit-appearance: none;
+            appearance: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .timeline__arrow:focus-visible,
+        .timeline__arrow:hover {
+            background-color: hsl(var(--hue),10%,50%,0.4);
+        }
+        
+        .timeline__arrow-icon {
+            display: block;
+            pointer-events: none;
+            transform: rotate(-90deg);
+            transition: transform var(--trans-dur) var(--trans-timing);
+            width: 100%;
+            height: auto;
+        }
+        
+        .timeline__date {
+            font-size: 0.833em;
+            line-height: 2.4;
+        }
+        
+        .timeline__dot {
+            background-color: #0A2041;
+            border-radius: 50%;
+            display: inline-block;
+            flex-shrink: 0;
+            margin: 0.625em 0;
+            margin-inline-end: 1em;
+            position: relative;
+            width: 0.75em;
+            height: 0.75em;
+        }
+        
+        .timeline__item {
+            position: relative;
+            padding-bottom: 2.25em;
+        }
+        
+        .timeline__item:not(:last-child):before {
+            background-color: #0A2041;
+            content: "";
+            display: block;
+            position: absolute;
+            top: 1em;
+            left: 2.625em;
+            width: 0.125em;
+            height: 100%;
+            transform: translateX(-50%);
+        }
+        
+        [dir="rtl"] .timeline__arrow-icon {
+            transform: rotate(90deg);
+        }
+        
+        [dir="rtl"] .timeline__item:not(:last-child):before {
+            right: 2.625em;
+            left: auto;
+            transform: translateX(50%);
+        }
+        
+        .timeline__item-header {
+            display: flex;
+        }
+        
+        .timeline__item-body {
+            border-radius: 0.375em;
+            overflow: hidden;
+            margin-top: 0.5em;
+            margin-inline-start: 4em;
+            height: 0;
+        }
+        
+        .timeline__item-body-content {
+            background-color: hsl(var(--hue),10%,50%,0.2);
+            opacity: 0;
+            padding: 0.5em 0.75em;
+            visibility: hidden;
+            transition:
+                opacity var(--trans-dur) var(--trans-timing),
+                visibility var(--trans-dur) steps(1,end);
+        }
+        
+        .timeline__meta {
+            width: 100%;
+        }
+        
+        .timeline__title {
+            font-size: 1.5em;
+            line-height: 1.333;
+        }
+        
+        /* Expanded state */
+        .timeline__item-body--expanded {
+            height: auto;
+        }
+        
+        .timeline__item-body--expanded .timeline__item-body-content {
+            opacity: 1;
+            visibility: visible;
+            transition-delay: var(--trans-dur), 0s;
+        }
+        
+        .timeline__arrow[aria-expanded="true"] .timeline__arrow-icon {
+            transform: rotate(0);
+        }
+        
+      
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg: hsl(var(--hue),10%,10%);
+                --fg: hsl(var(--hue),10%,90%);
+                --primary: hsl(var(--hue),90%,70%);
+            }
+        }
+         
+ 
+
+body, p {
+	color: #787976; 
+	font: 400 1rem/1.5625rem "Open Sans", sans-serif;
+}
+
+.p-large {
+	font: 400 1.125rem/1.625rem "Open Sans", sans-serif;
+}
+
+.p-small {
+	font: 400 0.875rem/1.375rem "Open Sans", sans-serif;
+}
+
+.p-heading {
+	margin-bottom: 3.5rem;
+	text-align: center;
+}
+
+.li-space-lg li {
+	margin-bottom: 0.375rem;
+}
+
+.indent {
+	padding-left: 1.25rem;
+}
+
+h1 {
+	color: #484a46;
+	font: 700 2.5rem/3rem "Montserrat", sans-serif;
+}
+
+h2 {
+	color: #484a46;
+	font: 700 1.75rem/2.125rem "Montserrat", sans-serif;
+}
+
+h3 {
+	color: #484a46;
+	font: 700 1.375rem/1.75rem "Montserrat", sans-serif;
+}
+
+h4 {
+	color: #484a46;
+	font: 700 1.25rem/1.625rem "Montserrat", sans-serif;
+}
+
+h5 {
+	color: #484a46;
+	font: 700 1.125rem/1.5rem "Montserrat", sans-serif;
+}
+
+h6 {
+	color: #484a46;
+	font: 700 1rem/1.375rem "Montserrat", sans-serif;
+}
+
+a {
+	color: #787976;
+	text-decoration: underline;
+}
+
+a:hover {
+	color: #787976;
+	text-decoration: underline;
+}
+
+a.green {
+	color: #14bf98;
+}
+
+a.white,
+.white {
+	color: #dfe5ec;
+}
+
+.testimonial-text {
+	font-style: italic;
+}
+
+.testimonial-author {
+	font: 700 1rem/1.375rem "Montserrat", sans-serif;
+}
+
+strong {
+	color: #484a46;
+}
+
+.section-title {
+	color: #0A2041;
+	font: 500 0.8125rem/1.125rem "Montserrat", sans-serif;
+}
+
+.btn-solid-reg {
+	display: inline-block;
+	padding: 1.1875rem 1.875rem 1.1875rem 1.875rem;
+	border: 0.125rem solid #0A2041;
+	border-radius: 0.25rem;
+	background-color: #0A2041;
+	color: #fff;
+	font: 700 0.75rem/0 "Montserrat", sans-serif;
+	text-decoration: none;
+	transition: all 0.2s;
+}
+
+.btn-solid-reg:hover {
+	background-color: transparent;
+	color: #0A2041;
+	text-decoration: none;
+}
+
+.btn-solid-lg {
+	display: inline-block;
+	padding: 1.375rem 2.125rem 1.375rem 2.125rem;
+	border: 0.125rem solid #0A2041;
+	border-radius: 0.25rem;
+	background-color: #0A2041;
+	color: #fff;
+	font: 700 0.75rem/0 "Montserrat", sans-serif;
+	text-decoration: none;
+	transition: all 0.2s;
+}
+ 
+ 
+.header {
+	background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.5)), url('img2.jpg') center center no-repeat;
+	background-size: cover;
+}
+
+.header .header-content {
+	padding-top: 8rem;
+	padding-bottom: 2.125rem;
+	text-align: center;
+}
+
+.header .text-container {
+	margin-bottom: 3rem;
+}
+
+.header h1 {
+	margin-bottom: 0.5rem;
+	color: #fff;
+}
+
+.header .p-large {
+	margin-bottom: 2rem;
+	color: #dfe5ec;
+}
+
+.header .btn-solid-lg {
+	margin-right: 0.5rem;
+	margin-bottom: 1.25rem;
+}
+.basic-1 {
+	padding-top: 6.5rem;
+	padding-bottom: 3rem;
+}
+
+.basic-1 .text-container {
+	margin-bottom: 3rem;
+}
+
+.basic-1 .section-title {
+	margin-bottom: 0.5rem;
+}
+
+.basic-1 h2 {
+	margin-bottom: 1.375rem;
+}
+
+.basic-1 .testimonial-author {
+	color: #484a46;
+}
+ 
+.basic-1 .image-container {
+	overflow: hidden;
+	border-radius: 0.25rem;
+}
+
+.basic-1 .image-container img {
+	margin: 0;
+	border-radius: 0.25rem;
+	transition: all 0.3s;
+}
+
+.basic-1 .image-container:hover img {
+	-moz-transform: scale(1.15);
+	-webkit-transform: scale(1.15);
+	transform: scale(1.15);
+} 
+.slider {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+.slick-slide {
+  margin: 0 5px;
+}
+.slick-list {
+  margin: 0px -5px 0px -5px;
+}
+ 
+ 
+.slick-prev:before, .slick-next:before {
+  font-size: 70px;
+  color: #EA8496;
+  line-height: inherit;
+  font-weight: bold;
+}
+.slider img {
+  height: 324px;
+}
+.slideshow {
+  .img-wrapper {
+    display: none;
+    height: 70vh;
+    img {
+      object-fit: cover;
+      width: 90%;
+      border-radius: 22px;
+    }
+  }
+}
+
+ 
+    </style>
+</head>
+<body>
+    
+     
+
+    <!-- Header -->
+    <header id="header" class="header">
+        <div class="header-content">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="text-container">
+                            <h1>AUSSIE <br> DREAM TOUR 2024</h1>
+                            <p class="p-heading p-large">Join us on the #AussieDreamTour2024 to unlock the door to your Australian dream.</p>
+                            <a class="btn-solid-lg page-scroll" href="http://event.indraimmigration.com/">REGISTER NOW</a>
+                        </div>
+                    </div>  
+                </div> 
+            </div>  
+        </div>  
+    </header> 
+    
+
+
+   
+                  
+<!---Time Line-->
+<svg display="none">
+    <symbol id="arrow">
+        <polyline points="7 10,12 15,17 10" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" />
+    </symbol>
+</svg>
+
+ 
+    
+    <h1>Aussie Dream Tour 2024</h1>
+    <div id="timeline" class="timeline">
+        
+        
+        <div class="timeline__item">
+            <div class="timeline__item-header">
+                <button class="timeline__arrow" type="button" id="item1" aria-labelledby="item1-name" aria-expanded="false" aria-controls="item1-ctrld" aria-haspopup="true" data-item="1">
+                    <svg class="timeline__arrow-icon" viewBox="0 0 24 24" width="24px" height="24px">
+                        <use href="#arrow" />
+                    </svg>
+                </button>
+                <span class="timeline__dot"></span>
+                <span id="item1-name" class="timeline__meta">
+                    <time class="timeline__date" datetime="19-01-2024">January 19th,2024</time><br>
+                    <strong class="timeline__title">Colombo</strong>
+                </span>
+            </div>
+            <div class="timeline__item-body" id="item1-ctrld" role="region" aria-labelledby="item1" aria-hidden="true">
+                <div class="timeline__item-body-content">
+                    <p class="timeline__item-p">Location - Hatch Works Auditorium <br> Time - 6.00pm to 7.00pm</p>
+                    <div class="slideshow">
+                        <div class="img-wrapper"><img src="images/Colombo/colombo1.jpeg" alt=""></div>
+                        <div class="img-wrapper"><img src="images/Colombo/colombo2.jpeg" alt=""></div>
+                        <div class="img-wrapper"><img src="images/Colombo/colombo3.jpeg" alt=""></div>
+                        <div class="img-wrapper"><img src="images/Colombo/colombo4.jpeg" alt=""></div>
+                        <div class="img-wrapper"><img src="images/Colombo/colombo5.jpeg" alt=""></div>
+                        <div class="img-wrapper"><img src="images/Colombo/colombo6.jpeg" alt=""></div>
+                        <div class="img-wrapper"><img src="images/Colombo/colombo7.jpeg" alt=""></div>
+                        <div class="img-wrapper"><img src="images/Colombo/colombo8.jpeg" alt=""></div>
+                        <div class="img-wrapper"><img src="images/Colombo/colombo9.jpeg" alt=""></div>
+                        
+                        <div class="dots">
+                          <div class="dot active"></div>
+                          <div class="dot"></div>
+                          <div class="dot"></div>
+                          <div class="dot"></div>
+                          <div class="dot"></div>
+                          <div class="dot"></div>
+                          <div class="dot"></div>
+                          <div class="dot"></div>
+                          <div class="dot"></div>
+                          <div class="dot"></div>
+                        </div>
+                      </div>
+                </div>
+            </div>
+        </div>
+        <div class="timeline__item">
+            <div class="timeline__item-header">
+                <button class="timeline__arrow" type="button" id="item2" aria-labelledby="item2-name" aria-expanded="false" aria-controls="item2-ctrld" aria-haspopup="true" data-item="2">
+                    <svg class="timeline__arrow-icon" viewBox="0 0 24 24" width="24px" height="24px">
+                        <use href="#arrow" />
+                    </svg>
+                </button>
+                <span class="timeline__dot"></span>
+                <span id="item2-name" class="timeline__meta">
+                    <time class="timeline__date" datetime="20-01-2024"> January 20th, 2024</time><br>
+                    <strong class="timeline__title">Galle</strong>
+                </span>
+            </div>
+            <div class="timeline__item-body" id="item2-ctrld" role="region" aria-labelledby="item2" aria-hidden="true">
+                <div class="timeline__item-body-content">
+                    <p class="timeline__item-p">Location - Jetwing Lighthouse <br> Time - 4.30pm to 6.00pm</p>
+                    <div class="slideshow">
+                        <div class="img-wrapper"><img src="images/Galle/galle1.jpeg" alt=""></div>
+                        <div class="img-wrapper"><img src="images/Galle/galle2.jpeg" alt=""></div>
+                        <div class="img-wrapper"><img src="images/Galle/galle3.jpeg" alt=""></div>
+                        <div class="img-wrapper"><img src="images/Galle/galle4.jpeg" alt=""></div>
+                        <div class="img-wrapper"><img src="images/Galle/galle5.jpeg" alt=""></div>
+                        <div class="img-wrapper"><img src="images/Galle/galle6.jpeg" alt=""></div>
+                        <div class="img-wrapper"><img src="images/Galle/galle7.jpeg" alt=""></div>
+                        <div class="img-wrapper"><img src="images/Galle/galle8.jpeg" alt=""></div>
+                        <div class="img-wrapper"><img src="images/Galle/galle9.jpeg" alt=""></div>
+                    
+                        <div class="dots">
+                            <div class="dot active"></div>
+                            <div class="dot"></div>
+                            <div class="dot"></div>
+                            <div class="dot"></div>
+                            <div class="dot"></div>
+                            <div class="dot"></div>
+                            <div class="dot"></div>
+                            <div class="dot"></div>
+                            <div class="dot"></div>
+                        </div>
+                    </div>
+                    
+            </div>
+        </div>
+        </div>
+        <div class="timeline__item">
+            <div class="timeline__item-header">
+                <button class="timeline__arrow" type="button" id="item3" aria-labelledby="item3-name" aria-expanded="false" aria-controls="item3-ctrld" aria-haspopup="true" data-item="3">
+                    <svg class="timeline__arrow-icon" viewBox="0 0 24 24" width="24px" height="24px">
+                        <use href="#arrow" />
+                    </svg>
+                </button>
+                <span class="timeline__dot"></span>
+                <span id="item3-name" class="timeline__meta">
+                    <time class="timeline__date" datetime="2024-01-21">January 21st, 2024</time><br>
+                    <strong class="timeline__title">Matara</strong>
+                </span>
+            </div>
+            <div class="timeline__item-body" id="item3-ctrld" role="region" aria-labelledby="item3" aria-hidden="true">
+                <div class="timeline__item-body-content">
+                    <p class="timeline__item-p">Location - Dutchman's Street <br> Time - 10.00am to 11.30am</p>
+                    <div class="slideshow">
+                        <div class="img-wrapper"><img src="images/Matara/matara1.jpeg" alt=""></div>
+                        <div class="img-wrapper"><img src="images/Matara/matara2.jpeg" alt=""></div>
+                        <div class="img-wrapper"><img src="images/Matara/matara3.jpeg" alt=""></div>
+                        <div class="img-wrapper"><img src="images/Matara/matara4.jpeg" alt=""></div>
+                        <div class="img-wrapper"><img src="images/Matara/matara5.jpeg" alt=""></div>
+                        <div class="img-wrapper"><img src="images/Matara/matara6.jpeg" alt=""></div>
+                        <div class="img-wrapper"><img src="images/Matara/matara7.jpeg" alt=""></div>
+                        <div class="img-wrapper"><img src="images/Matara/matara8.jpeg" alt=""></div>
+                        
+                        <div class="dots">
+                          <div class="dot active"></div>
+                          <div class="dot"></div>
+                          <div class="dot"></div>
+                          <div class="dot"></div>
+                          <div class="dot"></div>
+                          <div class="dot"></div>
+                          <div class="dot"></div>
+                          <div class="dot"></div>
+                          <div class="dot"></div>
+                        </div>
+                      </div>
+                </div>
+            </div>
+        </div>
+        <div class="timeline__item">
+            <div class="timeline__item-header">
+                <button class="timeline__arrow" type="button" id="item4" aria-labelledby="item4-name" aria-expanded="false" aria-controls="item4-ctrld" aria-haspopup="true" data-item="4">
+                    <svg class="timeline__arrow-icon" viewBox="0 0 24 24" width="24px" height="24px">
+                        <use href="#arrow" />
+                    </svg>
+                </button>
+                <span class="timeline__dot"></span>
+                <span id="item4-name" class="timeline__meta">
+                    <time class="timeline__date" datetime="2024-01-24">January 24th, 2024</time><br>
+                    <strong class="timeline__title">Kandy</strong>
+                </span>
+            </div>
+            <div class="timeline__item-body" id="item4-ctrld" role="region" aria-labelledby="item4" aria-hidden="true">
+                <div class="timeline__item-body-content">
+                    <p class="timeline__item-p">Location - Kandy City Center <br> Time - 5.00pm to 6.30pm</p>
+                    <div class="slideshow">
+                        <div class="img-wrapper"><img src="images/Kandy/kandy1.jpeg" alt=""></div>
+                        <div class="img-wrapper"><img src="images/Kandy/kandy2.jpeg" alt=""></div>
+                        <div class="img-wrapper"><img src="images/Kandy/kandy3.jpeg" alt=""></div>
+                        <div class="img-wrapper"><img src="images/Kandy/kandy4.jpeg" alt=""></div>
+                        <div class="img-wrapper"><img src="images/Kandy/kandy5.jpeg" alt=""></div>
+                        <div class="img-wrapper"><img src="images/Kandy/kandy6.jpeg" alt=""></div>
+                        <div class="img-wrapper"><img src="images/Kandy/kandy7.jpeg" alt=""></div>
+                        <div class="img-wrapper"><img src="images/Kandy/kandy8.jpeg" alt=""></div>
+                        <div class="img-wrapper"><img src="images/Kandy/kandy9.jpeg" alt=""></div>
+                        <div class="img-wrapper"><img src="images/Kandy/kandy10.jpeg" alt=""></div>
+                        
+                        <div class="dots">
+                          <div class="dot active"></div>
+                          <div class="dot"></div>
+                          <div class="dot"></div>
+                          <div class="dot"></div>
+                          <div class="dot"></div>
+                          <div class="dot"></div>
+                          <div class="dot"></div>
+                          <div class="dot"></div>
+                          <div class="dot"></div>
+                          <div class="dot"></div>
+                        </div>
+                      </div>
+                </div>
+            </div>
+        </div>
+        <div class="timeline__item">
+            <div class="timeline__item-header">
+                <button class="timeline__arrow" type="button" id="item5" aria-labelledby="item5-name" aria-expanded="false" aria-controls="item5-ctrld" aria-haspopup="true" data-item="5">
+                    <svg class="timeline__arrow-icon" viewBox="0 0 24 24" width="24px" height="24px">
+                        <use href="#arrow" />
+                    </svg>
+                </button>
+                <span class="timeline__dot"></span>
+                <span id="item5-name" class="timeline__meta">
+                    <time class="timeline__date" datetime="2024-01-25">January 25th, 2024</time><br>
+                    <strong class="timeline__title">Batticaloa</strong>
+                </span>
+            </div>
+            <div class="timeline__item-body" id="item5-ctrld" role="region" aria-labelledby="item5" aria-hidden="true">
+                <div class="timeline__item-body-content">
+                    <p class="timeline__item-p">Location - East Lagoon Hotel<br> Time - 10.00am to 11.30am</p>
+                    <div class="slideshow">
+                        <div class="img-wrapper"><img src="images/Batticaloa/batticaloa1.jpeg" alt=""></div>
+                        <div class="img-wrapper"><img src="images/Batticaloa/batticaloa2.jpeg" alt=""></div>
+                        <div class="img-wrapper"><img src="images/Batticaloa/batticaloa3.jpeg" alt=""></div>
+                        <div class="img-wrapper"><img src="images/Batticaloa/batticaloa4.jpeg" alt=""></div>
+                        <div class="img-wrapper"><img src="images/Batticaloa/batticaloa5.jpeg" alt=""></div>
+                        <div class="img-wrapper"><img src="images/Batticaloa/batticaloa6.jpeg" alt=""></div>
+                        <div class="img-wrapper"><img src="images/Batticaloa/batticaloa7.jpeg" alt=""></div>
+                        <div class="img-wrapper"><img src="images/Batticaloa/batticaloa8.jpeg" alt=""></div>
+                        <div class="img-wrapper"><img src="images/Batticaloa/batticaloa9.jpeg" alt=""></div>
+                        <div class="img-wrapper"><img src="images/Batticaloa/batticaloa10.jpeg" alt=""></div>
+                        <div class="img-wrapper"><img src="images/Batticaloa/batticaloa11.jpeg" alt=""></div>
+                        <div class="img-wrapper"><img src="images/Batticaloa/batticaloa12.jpeg" alt=""></div>
+                        <div class="img-wrapper"><img src="images/Batticaloa/batticaloa13.jpeg" alt=""></div>
+                        <div class="img-wrapper"><img src="images/Batticaloa/batticaloa14.jpeg" alt=""></div>
+                        <div class="img-wrapper"><img src="images/Batticaloa/batticaloa15.jpeg" alt=""></div>
+                        
+                        
+                        <div class="dots">
+                          <div class="dot active"></div>
+                          <div class="dot"></div>
+                          <div class="dot"></div>
+                          <div class="dot"></div>
+                          <div class="dot"></div>
+                          <div class="dot"></div>
+                          <div class="dot"></div>
+                          <div class="dot"></div>
+                          <div class="dot"></div>
+                          <div class="dot"></div>
+                          <div class="dot"></div>
+                          <div class="dot"></div>
+                          <div class="dot"></div>
+                          <div class="dot"></div>
+                          <div class="dot"></div>
+                          <div class="dot"></div>
+                        </div>
+                      </div>
+                </div>
+                
+            </div>
+        </div>
+        <div class="timeline__item">
+            <div class="timeline__item-header">
+                <button class="timeline__arrow" type="button" id="item6" aria-labelledby="item6-name" aria-expanded="false" aria-controls="item6-ctrld" aria-haspopup="true" data-item="6">
+                    <svg class="timeline__arrow-icon" viewBox="0 0 24 24" width="24px" height="24px">
+                        <use href="#arrow" />
+                    </svg>
+                </button>
+                <span class="timeline__dot"></span>
+                <span id="item6-name" class="timeline__meta">
+                    <time class="timeline__date" datetime="2024-01-26">January 26th, 2024</time><br>
+                    <strong class="timeline__title">Kurunegala</strong>
+                </span>
+            </div>
+            <div class="timeline__item-body" id="item6-ctrld" role="region" aria-labelledby="item6" aria-hidden="true">
+                <div class="timeline__item-body-content">
+                    <p class="timeline__item-p">Location - Epitome Hotel <br> Time - 5.00pm to 6.30pm</p>
+                    <div class="slideshow">
+                        <div class="img-wrapper"><img src="images/Kurunegala/kurunegala1.jpeg" alt=""></div>
+                        <div class="img-wrapper"><img src="images/Kurunegala/kurunegala2.jpeg" alt=""></div>
+                        <div class="img-wrapper"><img src="images/Kurunegala/kurunegala3.jpeg" alt=""></div>
+                        <div class="img-wrapper"><img src="images/Kurunegala/kurunegala4.jpeg" alt=""></div>
+                        <div class="img-wrapper"><img src="images/Kurunegala/kurunegala5.jpeg" alt=""></div>
+                        <div class="img-wrapper"><img src="images/Kurunegala/kurunegala6.jpeg" alt=""></div>
+                        <div class="img-wrapper"><img src="images/Kurunegala/kurunegala7.jpeg" alt=""></div>
+                        <div class="img-wrapper"><img src="images/Kurunegala/kurunegala8.jpeg" alt=""></div>
+                        <div class="img-wrapper"><img src="images/Kurunegala/kurunegala9.jpeg" alt=""></div>
+                        <div class="img-wrapper"><img src="images/Kurunegala/kurunegala10.jpeg" alt=""></div>
+                        <div class="img-wrapper"><img src="images/Kurunegala/kurunegala11.jpeg" alt=""></div>
+                        
+                        
+                        
+                        <div class="dots">
+                          <div class="dot active"></div>
+                          <div class="dot"></div>
+                          <div class="dot"></div>
+                          <div class="dot"></div>
+                          <div class="dot"></div>
+                          <div class="dot"></div>
+                          <div class="dot"></div>
+                          <div class="dot"></div>
+                          <div class="dot"></div>
+                          <div class="dot"></div>
+                          <div class="dot"></div>
+                          <div class="dot"></div>
+                          <div class="dot"></div>
+                        </div>
+                      </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+    </div>
+     <!-- Intro -->
+     <div id="intro" class="basic-1">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-5">
+                    <div class="text-container">
+                        <div class="section-title">#AussieDreamTour2024</div>
+                        
+                        <p>Discover the allure of the Australian dream right here in Sri Lanka! Join us on the extraordinary Aussie Dream Tour 2024 as we weave through six enchanting destinations, each offering a unique blend of culture, beauty, and adventure. From pristine beaches to vibrant cities, this immersive tour promises to unlock the door to your Australian dream without leaving the shores of Sri Lanka. Get ready for an unforgettable experience as we explore, indulge, and create memories that will last a lifetime. Are you ready to make your dream a reality?</p>
+                         
+                    </div>  
+                </div>  
+                <div class="col-lg-7">
+                    <div class="image-container">
+                        <img class="img-fluid" src="img2.jpg" alt="alternative">
+                    </div>  
+                </div>  
+            </div>  
+        </div>  
+    </div>  
+
+</div>
+
+<script>
+   window.addEventListener("DOMContentLoaded", () => {
+    const ctl = new CollapsibleTimeline("#timeline");
+});
+
+class CollapsibleTimeline {
+    constructor(el) {
+        this.el = document.querySelector(el);
+
+        this.init();
+    }
+    init() {
+        this.el?.addEventListener("click", this.itemAction.bind(this));
+    }
+    animateItemAction(button, ctrld, contentHeight, shouldCollapse) {
+        const expandedClass = "timeline__item-body--expanded";
+        const animOptions = {
+            duration: 300,
+            easing: "cubic-bezier(0.65,0,0.35,1)"
+        };
+
+        if (shouldCollapse) {
+            button.ariaExpanded = "false";
+            ctrld.ariaHidden = "true";
+            ctrld.classList.remove(expandedClass);
+            animOptions.duration *= 2;
+            this.animation = ctrld.animate([
+                { height: `${contentHeight}px` },
+                { height: `${contentHeight}px` },
+                { height: "0px" }
+            ], animOptions);
+        } else {
+            button.ariaExpanded = "true";
+            ctrld.ariaHidden = "false";
+            ctrld.classList.add(expandedClass);
+            this.animation = ctrld.animate([
+                { height: "0px" },
+                { height: `${contentHeight}px` }
+            ], animOptions);
+        }
+    }
+    itemAction(e) {
+        const { target } = e;
+        const action = target?.getAttribute("data-action");
+        const item = target?.getAttribute("data-item");
+
+        if (action) {
+            const targetExpanded = action === "expand" ? "false" : "true";
+            const buttons = Array.from(this.el?.querySelectorAll(`[aria-expanded="${targetExpanded}"]`));
+            const wasExpanded = action === "collapse";
+
+            for (let button of buttons) {
+                const buttonID = button.getAttribute("data-item");
+                const ctrld = this.el?.querySelector(`#item${buttonID}-ctrld`);
+                const contentHeight = ctrld.firstElementChild?.offsetHeight;
+
+                this.animateItemAction(button, ctrld, contentHeight, wasExpanded);
+            }
+
+        } else if (item) {
+            const button = this.el?.querySelector(`[data-item="${item}"]`);
+            const expanded = button?.getAttribute("aria-expanded");
+
+            if (!expanded) return;
+
+            const wasExpanded = expanded === "true";
+            const ctrld = this.el?.querySelector(`#item${item}-ctrld`);
+            const contentHeight = ctrld.firstElementChild?.offsetHeight;
+
+            this.animateItemAction(button, ctrld, contentHeight, wasExpanded);
+        }
+    }
+}
+
+'use strict';
+
+function initSlideshow(sectionId) {
+    let imgWrapper = document.querySelectorAll(`#${sectionId} .img-wrapper`),
+        dots = document.querySelectorAll(`#${sectionId} .dots > .dot`),
+        i = 0;
+
+    function reset() {
+        for (let i = 0; i < imgWrapper.length; i++) {
+            imgWrapper[i].style.display = 'none';
+            dots[i].classList.remove('active');
+        }
+    }
+
+    function autoSlide() {
+        if (i >= imgWrapper.length) {
+            i = 0;
+        }
+        reset();
+        imgWrapper[i].style.display = 'block';
+        dots[i].classList.add('active');
+        i++;
+        setTimeout(autoSlide, 4000);
+    }
+
+    autoSlide();
+}
+
+window.addEventListener("DOMContentLoaded", () => {
+    initSlideshow("item1-ctrld");
+    initSlideshow("item2-ctrld");
+    initSlideshow("item3-ctrld");
+    initSlideshow("item4-ctrld");
+    initSlideshow("item5-ctrld");
+    initSlideshow("item6-ctrld");
+
+   
+});
+
+
+
+</script>	
+</body>
+</html>
